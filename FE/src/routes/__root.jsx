@@ -3,6 +3,7 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { useSelector } from "react-redux";
+import NavbarUser from "../components/User/Navbar/Navbar"
 
 export const Route = createRootRoute({
   component: () => {
@@ -34,7 +35,12 @@ export const Route = createRootRoute({
           </>
         ) : (
           // Template user
-          <Outlet />
+          <>
+            <div className="bg" id="home">
+              <NavbarUser />
+            </div>
+            <Outlet />
+          </>
         )}
       </>
     );
