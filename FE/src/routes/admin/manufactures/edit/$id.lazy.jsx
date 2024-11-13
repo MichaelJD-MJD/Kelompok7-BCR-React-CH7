@@ -1,15 +1,15 @@
 import { createLazyFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import Protected from "../../../components/Auth/Protected";
+import Protected from "../../../../components/Auth/Protected";
 import {
     getDetailManufacture,
     updateManufacture,
-} from "../../../service/manufacture";
+} from "../../../../service/manufacture";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Row, Col, Card, Form, Button, Image } from "react-bootstrap";
-import "../../../styles/manufactures/manufacture.css";
+import "../../../../styles/manufactures/manufacture.css";
 
-export const Route = createLazyFileRoute("/manufactures/edit/$id")({
+export const Route = createLazyFileRoute("/admin/manufactures/edit/$id")({
     component: () => (
         <Protected roles={[1]}>
             <EditManufacture />

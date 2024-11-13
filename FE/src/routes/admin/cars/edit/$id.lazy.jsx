@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import "../../../styles/update-car.css";
-import { getDetailCar, updateStudent } from "../../../service/car/car.service.index";
-import { getTypes } from "../../../service/types-service";
-import Protected from "../../../components/Auth/Protected";
+import "../../../../styles/update-car.css";
+import { getDetailCar, updateStudent } from "../../../../service/car/car.service.index";
+import { getTypes } from "../../../../service/types-service";
+import Protected from "../../../../components/Auth/Protected";
 
-export const Route = createLazyFileRoute("/cars/edit/$id")({
+export const Route = createLazyFileRoute("/admin/cars/edit/$id")({
   component: () => (
     <Protected roles={[1]}>
       <EditCar />

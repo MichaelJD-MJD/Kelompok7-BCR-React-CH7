@@ -6,11 +6,11 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { getDetailType, updateType } from "../../../service/types-service";
+import { getDetailType, updateType } from "../../../../service/types-service";
 import { toast } from "react-toastify";
-import Protected from "../../../components/Auth/Protected";
+import Protected from "../../../../components/Auth/Protected";
 
-export const Route = createLazyFileRoute("/types-routes/edit/$id")({
+export const Route = createLazyFileRoute("/admin/types-routes/edit/$id")({
   component: () => (
     <Protected roles={[1]}>
       <EditType />

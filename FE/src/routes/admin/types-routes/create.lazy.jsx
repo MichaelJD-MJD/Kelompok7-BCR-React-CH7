@@ -5,11 +5,11 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { createType } from "../../service/types-service";
+import { createType } from "../../../service/types-service";
 import { toast } from "react-toastify";
-import Protected from "../../components/Auth/Protected";
+import Protected from "../../../components/Auth/Protected";
 
-export const Route = createLazyFileRoute("/types-routes/create")({
+export const Route = createLazyFileRoute("/admin/types-routes/create")({
   component: () => (
     <Protected roles={[1]}>
       <CreateType />

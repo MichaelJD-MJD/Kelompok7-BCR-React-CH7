@@ -1,52 +1,52 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { getTypes } from "../service/types-service";
-import TypesItem from "../components/types_components/TypesItem";
-import { Breadcrumb, Button } from "react-bootstrap";
-import Protected from "../components/Auth/Protected";
+import { createLazyFileRoute, Link } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import { getTypes } from '../../../service/types-service'
+import TypesItem from '../../../components/types_components/TypesItem'
+import { Breadcrumb, Button } from 'react-bootstrap'
+import Protected from '../../../components/Auth/Protected'
 
-export const Route = createLazyFileRoute("/types")({
+export const Route = createLazyFileRoute('/admin/types-routes/types')({
   component: () => (
-    <Protected roles={[1,2]}>
+    <Protected roles={[1, 2]}>
       <Types />
     </Protected>
   ),
-});
+})
 
 function Types() {
-  const { user, token } = useSelector((state) => state.auth);
+  const { user, token } = useSelector((state) => state.auth)
 
-  const [types, setTypes] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [types, setTypes] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const getTypesData = async () => {
       try {
-        setIsLoading(true);
-        console.log("Fetching types data...");
-        const result = await getTypes();
-        console.log("Result from getTypes:", result);
+        setIsLoading(true)
+        console.log('Fetching types data...')
+        const result = await getTypes()
+        console.log('Result from getTypes:', result)
 
         if (result.success) {
-          setTypes(result.data);
+          setTypes(result.data)
         } else {
-          console.warn("Failed to fetch types data");
+          console.warn('Failed to fetch types data')
         }
       } catch (error) {
-        console.error("Error fetching types data:", error);
+        console.error('Error fetching types data:', error)
       } finally {
-        setIsLoading(false);
-        console.log("Finished loading types data");
+        setIsLoading(false)
+        console.log('Finished loading types data')
       }
-    };
+    }
 
     if (token) {
-      getTypesData();
+      getTypesData()
     }
-  }, [token]);
+  }, [token])
 
   if (!token) {
     return (
@@ -55,7 +55,7 @@ function Types() {
           <h1 className="text-center">Please login first to get type data!</h1>
         </Col>
       </Row>
-    );
+    )
   }
 
   if (isLoading) {
@@ -63,7 +63,7 @@ function Types() {
       <Row className="mt-4">
         <h1>Loading...</h1>
       </Row>
-    );
+    )
   }
 
   return (
@@ -82,7 +82,7 @@ function Types() {
             <Button
               as={Link}
               to="/types-routes/create"
-              style={{ backgroundColor: "#0D28A6", border: "0px" }}
+              style={{ backgroundColor: '#0D28A6', border: '0px' }}
             >
               + Add New Type
             </Button>
@@ -98,5 +98,5 @@ function Types() {
         )}
       </Row>
     </>
-  );
+  )
 }

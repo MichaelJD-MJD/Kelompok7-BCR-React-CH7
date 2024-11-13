@@ -2,9 +2,9 @@ import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getDetailManufacture } from "../../service/manufacture";
+import { getDetailManufacture } from "../../../service/manufacture";
 
-export const Route = createLazyFileRoute("/manufactures/$id")({
+export const Route = createLazyFileRoute("/admin/manufactures/$id")({
     component: ManufactureDetail,
 });
 

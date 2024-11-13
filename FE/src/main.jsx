@@ -8,6 +8,7 @@ import { Theme } from "@radix-ui/themes";
 import "./index.css";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import "@radix-ui/themes/styles.css";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";

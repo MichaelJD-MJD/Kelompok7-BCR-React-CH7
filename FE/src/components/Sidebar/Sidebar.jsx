@@ -22,7 +22,7 @@ const Sidebar = () => {
               </a>
             </div>
             <div className="cars text-center m-2">
-              <a href="admin-cars.html">
+              <a href="#">
                 <img src={truckIc} alt="" />
                 <p>Cars</p>
               </a>
@@ -32,7 +32,7 @@ const Sidebar = () => {
             <img src={kotak2} alt="" />
             <p className="mt-3">
               <Link
-                to="/"
+                to="/admin/cars"
                 style={{ fontWeight: 700, textDecoration: "none" }}
               >
                 Cars
@@ -40,7 +40,7 @@ const Sidebar = () => {
             </p>
             <p className="mt-3">
               <Link
-                to="/manufactures"
+                to="/admin//manufactures"
                 style={{ fontWeight: 700, textDecoration: "none" }}
               >
                 Manufactures
@@ -48,7 +48,7 @@ const Sidebar = () => {
             </p>
             <p className="mt-3">
               <Link
-                to="/types"
+                to="/admin/types-routes/types"
                 style={{ fontWeight: 700, textDecoration: "none" }}
               >
                 Types

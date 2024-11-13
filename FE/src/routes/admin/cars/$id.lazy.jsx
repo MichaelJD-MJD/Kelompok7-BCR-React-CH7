@@ -1,11 +1,11 @@
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { getDetailCar } from "../../service/car/car.service.index";
+import { getDetailCar } from "../../../service/car/car.service.index";
 import { Button, Col, Row } from "react-bootstrap";
-import "../../styles/list-car.css";
-import { getDetailType } from "../../service/types-service";
+import "../../../styles/list-car.css";
+import { getDetailType } from "../../../service/types-service";
 
-export const Route = createLazyFileRoute("/cars/$id")({
+export const Route = createLazyFileRoute("/admin/cars/$id")({
   component: CarDetail,
 });
 

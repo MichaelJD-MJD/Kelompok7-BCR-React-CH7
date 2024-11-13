@@ -1,4 +1,4 @@
-import {Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import keyIc from "../../assets/icon/fi_key.png";
 import clockIc from "../../assets/icon/fi_clock.png";
 import trashIc from "../../assets/icon/fi_trash-2.png";
@@ -16,15 +16,15 @@ const CarItem = ({ car }) => {
   const [carToDelete, setcarToDelete] = useState(null);
 
   const onDelete = async () => {
-    if(carToDelete){
-        const result = await deleteCar(carToDelete.id);
-        if (result?.success) {
-          navigate({ to: "/" });
-          window.location.reload();
-        } else {
-            alert(result?.message);
-        }
-        setShowModal(false);
+    if (carToDelete) {
+      const result = await deleteCar(carToDelete.id);
+      if (result?.success) {
+        navigate({ to: "/" });
+        window.location.reload();
+      } else {
+        alert(result?.message);
+      }
+      setShowModal(false);
     }
   };
 
@@ -50,27 +50,27 @@ const CarItem = ({ car }) => {
             <img src={clockIc} alt="" /> Updated at 27 Oct 2024, 13:00
           </p>
           {user && user?.role_id === 1 && (
-          <div className="text-center">
-            <a
-              className="btn btn-primary delete-btn ps-4 pe-4 p-2 me-2"
-              data-bs-toggle="modal"
-              data-bs-target="#deleteConfirmation"
-              onClick={(e) => {
-                setcarToDelete(car);
-                setShowModal(true);
-                e.stopPropagation();
-              }}
-            >
-              <img src={trashIc} alt="" /> Delete
-            </a>
-            <Link
-              to={`/cars/edit/${car.id}`}
-              className="btn btn-primary edit-btn ps-4 pe-4 p-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img src={editIc} alt="" /> Edit
-            </Link>
-          </div>
+            <div className="text-center">
+              <a
+                className="btn btn-primary delete-btn ps-4 pe-4 p-2 me-2"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteConfirmation"
+                onClick={(e) => {
+                  setcarToDelete(car);
+                  setShowModal(true);
+                  e.stopPropagation();
+                }}
+              >
+                <img src={trashIc} alt="" /> Delete
+              </a>
+              <Link
+                to={`/cars/edit/${car.id}`}
+                className="btn btn-primary edit-btn ps-4 pe-4 p-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img src={editIc} alt="" /> Edit
+              </Link>
+            </div>
           )}
         </div>
       </Link>

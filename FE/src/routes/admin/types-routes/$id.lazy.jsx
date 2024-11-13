@@ -4,10 +4,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { getDetailType } from "../../service/types-service";
-import Protected from "../../components/Auth/Protected";
+import { getDetailType } from "../../../service/types-service";
+import Protected from "../../../components/Auth/Protected";
 
-export const Route = createLazyFileRoute("/types-routes/$id")({
+export const Route = createLazyFileRoute("/admin/types-routes/$id")({
   component: () => (
     <Protected roles={[1,2]}>
       <TypeDetail />
