@@ -1,8 +1,11 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import "../styles/list-car.css";
-import { Theme } from "@radix-ui/themes";
-import { Flex, Text, Button } from "@radix-ui/themes";
 import WhyUs from "../components/User/WhyUs/WhysUs";
+import Header from "../components/User/Header/Header";
+import Testimonial from "../components/User/Testimonial/Testimonial";
+import Banner from "../components/User/Banner/Banner";
+import Faq from "../components/User/FAQ/Faq";
+import Footer from "../components/User/Footer/Footer";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
@@ -11,9 +14,12 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
   return (
     <>
-      <Theme>
+        <Header />
         <WhyUs />
-      </Theme>
+        <Testimonial />
+        <Banner />
+        <Faq />
+        <Footer />
     </>
   );
 }
