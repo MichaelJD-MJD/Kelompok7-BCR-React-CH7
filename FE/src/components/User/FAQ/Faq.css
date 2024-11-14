@@ -1,0 +1,25 @@
+.faq-container h3 {
+  font-size: 24px;
+  font-weight: bold;
+}
+.faq-container p {
+  font-size: 14px;
+  font-weight: 100;
+}
+.faq-container .accordion-header {
+  border: 1px solid #d4d4d4;
+}
+
+.accordion-collapse.show {
+  display: block !important;
+  visibility: visible !important;
+}
+
+@media (max-width: 767px) {
+  .faq-container h3 {
+    text-align: center;
+  }
+  .faq-container p {
+    text-align: center;
+  }
+}
