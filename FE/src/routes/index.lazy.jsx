@@ -1,18 +1,15 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import "../styles/list-car.css";
-import { Theme } from "@radix-ui/themes";
-import { Flex, Text, Button } from "@radix-ui/themes";
+import Banner from "../components/User/Banner/Banner";
 
 export const Route = createLazyFileRoute("/")({
-    component: Index
+    component: Index,
 });
 
 function Index() {
-  return (
-    <>
-      <Theme>
-        <h1>Hello ini dashboard</h1>
-      </Theme>
-    </>
-  );
+    return (
+        <div className="flex flex-col">
+            <Banner />
+        </div>
+    );
 }
