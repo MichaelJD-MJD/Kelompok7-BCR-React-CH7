@@ -12,8 +12,7 @@ export const Route = createRootRoute({
 
     // Show only Outlet on "/login" and "/register"
     const showOnlyOutlet =
-      location.pathname === "/login" || location.pathname === "/register" ||
-      location.pathname === "/searchCar";
+      location.pathname === "/login" || location.pathname === "/register"
 
     return (
       <>

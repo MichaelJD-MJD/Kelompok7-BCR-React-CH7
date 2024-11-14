@@ -1,4 +1,4 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import "../styles/list-car.css";
 import WhyUs from "../components/User/WhyUs/WhysUs";
 import Header from "../components/User/Header/Header";
@@ -8,7 +8,7 @@ import Faq from "../components/User/FAQ/Faq";
 import Footer from "../components/User/Footer/Footer";
 
 export const Route = createLazyFileRoute("/")({
-  component: Index,
+    component: Index,
 });
 
 function Index() {

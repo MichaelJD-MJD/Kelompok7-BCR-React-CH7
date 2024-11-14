@@ -11,8 +11,9 @@ const Banner = () => {
   useEffect(() => {
     const currentUrl = location.pathname;
     const pathSegments = currentUrl.split("/");
-    const extractedSegment = pathSegments[0];
+    const extractedSegment = pathSegments[1];
     setProductSegment(extractedSegment);
+    console.log(extractedSegment);
   }, [location]);
 
   return (
@@ -28,9 +29,9 @@ const Banner = () => {
               kualitas terbaik dengan harga terjangkau. Selalu siap melayani
               kebutuhanmu untuk sewa mobil selama 24 jam.
             </p>
-            {productSegment === "searchCar" ? (
+            {productSegment !== "searchCar" ? (
               <Button
-                className="start-btn btn bg-[#5CB85F] text-white py-2 px-4 rounded mt-4 inline-block hover:bg-[#4DAE4A] active:bg-[#4DAE4A] focus:outline-none focus:ring-2 focus:ring-[#4DAE4A] focus:ring-opacity-50"
+                className="bg-[#5CB85F] text-white py-2 px-4 rounded mt-4 inline-block hover:bg-[#4DAE4A] active:bg-[#3b8d39] focus:outline-none focus:ring-2 focus:ring-[#4DAE4A] focus:ring-opacity-50"
                 as={Link}
                 to="/searchCar"
                 href="#"
