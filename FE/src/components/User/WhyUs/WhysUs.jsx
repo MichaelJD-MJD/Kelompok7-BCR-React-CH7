@@ -42,13 +42,13 @@ const WhyUs = () => {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="flex flex-col items-center p-6 border border-gray-200 rounded-lg shadow-sm"
+            className="flex flex-col items-left p-6 border border-gray-200 rounded-lg shadow-sm"
           >
             <div className="mb-4">{feature.icon}</div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2 text-left">
               {feature.title}
             </h3>
-            <p className="text-gray-600 text-center">{feature.description}</p>
+            <p className="text-gray-600 text-left">{feature.description}</p>
           </div>
         ))}
       </div>
