@@ -81,7 +81,7 @@ function TypeDetail() {
               className="d-flex align-items-center"
               style={{ fontWeight: 700, width: "65px" }}
               as={Link}
-              to="/types"
+              to="/admin/types-routes/types"
             >
               Back
             </Button>

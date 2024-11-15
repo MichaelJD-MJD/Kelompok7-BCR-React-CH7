@@ -70,7 +70,7 @@ function EditManufacture() {
         };
         const result = await updateManufacture(id, request);
         if (result?.success) {
-            navigate({ to: `/manufactures` });
+            navigate({ to: `/admin/manufactures` });
             return;
         }
 

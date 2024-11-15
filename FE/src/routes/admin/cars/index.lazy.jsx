@@ -52,12 +52,12 @@ function Cars() {
         </div>
         <div className="col-2">
           {user && user?.role_id === 1 && (
-            <button className="btn add-btn">
+            <Link to={"/admin/cars/create"} className="btn add-btn">
               <img src={plusIc} alt="" />
               <span>
-                <Link to={"/cars/create"}>Add New Car</Link>
+                Add New Car
               </span>
-            </button>
+            </Link>
           )}
         </div>
       </div>

@@ -105,7 +105,7 @@ function CreateCar() {
 
     const result = await createCar(request);
     if (result?.success) {
-      navigate({ to: "/" });
+      navigate({ to: "/admin/cars" });
       return;
     }
 
@@ -383,9 +383,9 @@ function CreateCar() {
           <img src={currentImage} alt="" className="w-50" />
         </div>
         <div className="action-btn">
-          <button type="button" className="btn btn-danger">
-            <Link to={"/"}>Cancel</Link>
-          </button>
+          <Link to={"/admin/cars"} type="button" className="btn btn-danger">
+            Cancel
+          </Link>
           <button type="submit" className="btn btn-primary">
             Save
           </button>

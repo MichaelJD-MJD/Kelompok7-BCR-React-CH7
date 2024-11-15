@@ -71,8 +71,8 @@ function Types() {
       <Row className="d-flex justify-content-between align-items-center mt-3">
         <Col xs="auto">
           <Breadcrumb>
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="/types">Types</Breadcrumb.Item>
+            <Breadcrumb.Item href="/admin/cars">Home</Breadcrumb.Item>
+            <Breadcrumb.Item href="/admin/types">Types</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
 
@@ -81,7 +81,7 @@ function Types() {
             {/* Button di kanan */}
             <Button
               as={Link}
-              to="/types-routes/create"
+              to="/admin/types-routes/create"
               style={{ backgroundColor: '#0D28A6', border: '0px' }}
             >
               + Add New Type

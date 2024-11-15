@@ -89,7 +89,7 @@ function ManufactureDetail() {
                             className="d-flex align-items-center"
                             style={{ fontWeight: 700, width: "4.063rem" }}
                             as={Link}
-                            to="/manufactures"
+                            to="/admin/manufactures"
                         >
                             Back
                         </Button>

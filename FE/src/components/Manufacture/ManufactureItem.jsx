@@ -22,7 +22,7 @@ const ManufactureItem = ({ manufacture }) => {
     if (manufactureToDelete) {
       const result = await deleteManufacture(manufactureToDelete.id);
       if (result?.success) {
-        navigate({ to: "/manufactures" });
+        navigate({ to: "/admin/manufactures" });
         window.location.reload();
       } else {
         alert(result?.message);
@@ -32,7 +32,7 @@ const ManufactureItem = ({ manufacture }) => {
   };
 
   const handleNavigateToDetail = () => {
-    navigate({ to: `/manufactures/${manufacture.id}` });
+    navigate({ to: `/admin/manufactures/${manufacture.id}` });
   };
 
   return (
@@ -118,7 +118,7 @@ const ManufactureItem = ({ manufacture }) => {
                   variant="success"
                   className="btn-up px-4 p-2 mx-1"
                   as={Link}
-                  href={`/manufactures/edit/${manufacture?.id}`}
+                  href={`/admin/manufactures/edit/${manufacture?.id}`}
                 >
                   <svg
                     width="19"

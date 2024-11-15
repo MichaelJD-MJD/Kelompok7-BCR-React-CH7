@@ -79,7 +79,7 @@ function Index() {
             <button className="btn add-btn">
               <img src={plusIc} alt="" />
               <span>
-                <Link to={"/manufactures/create"}>Add New Manufacture</Link>
+                <Link to={"/admin/manufactures/create"}>Add New Manufacture</Link>
               </span>
             </button>
           </div>

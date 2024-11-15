@@ -92,7 +92,7 @@ function CarDetail() {
         <Button
           variant="secondary"
           className="mb-3"
-          onClick={() => navigate({to: "/"})}
+          onClick={() => navigate({to: "/admin/cars"})}
         >
           Back
         </Button>

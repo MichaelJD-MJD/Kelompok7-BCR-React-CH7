@@ -32,7 +32,7 @@ function CreateType() {
     };
     const result = await createType(request);
     if (result?.success) {
-      navigate({ to: "/types" });
+      navigate({ to: "/admin/types-routes/types" });
       return;
     }
 

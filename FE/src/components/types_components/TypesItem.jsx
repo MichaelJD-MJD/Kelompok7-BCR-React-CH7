@@ -57,7 +57,7 @@ const TypeItem = ({ type }) => {
         <Card.Body>
           <Card.Title style={{ fontWeight: 700 }}>{type?.type}</Card.Title>
           <Card.Text>{type?.description}</Card.Text>
-          <Button variant="primary" href={`/types-routes/${type?.id}`}>
+          <Button variant="primary" href={`/admin/types-routes/${type?.id}`}>
             Detail Types
           </Button>
           {user && user?.role_id === 1 && (
@@ -84,7 +84,7 @@ const TypeItem = ({ type }) => {
                 className="d-flex align-items-center"
                 style={{ fontWeight: 700, padding: "0.5rem 1.6rem" }}
                 as={Link}
-                to={`/types-routes/edit/${type?.id}`}
+                to={`/admin/types-routes/edit/${type?.id}`}
               >
                 <img
                   src={Edit}

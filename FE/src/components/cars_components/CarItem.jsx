@@ -19,7 +19,7 @@ const CarItem = ({ car }) => {
     if (carToDelete) {
       const result = await deleteCar(carToDelete.id);
       if (result?.success) {
-        navigate({ to: "/" });
+        navigate({ to: "/admin/cars" });
         window.location.reload();
       } else {
         alert(result?.message);
@@ -31,7 +31,7 @@ const CarItem = ({ car }) => {
   return (
     <div className="col-3 mb-2 p-0">
       <Link
-        to={`/cars/${car.id}`}
+        to={`/admin/cars/${car.id}`}
         className="card"
         style={{ cursor: "pointer", textDecoration: "none", color: "inherit" }}
       >
@@ -64,7 +64,7 @@ const CarItem = ({ car }) => {
                 <img src={trashIc} alt="" /> Delete
               </a>
               <Link
-                to={`/cars/edit/${car.id}`}
+                to={`/admin/cars/edit/${car.id}`}
                 className="btn btn-primary edit-btn ps-4 pe-4 p-2"
                 onClick={(e) => e.stopPropagation()}
               >
