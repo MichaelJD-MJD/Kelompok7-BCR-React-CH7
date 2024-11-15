@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import "./Navbar.css";
 import { useNavigate } from "@tanstack/react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../../../assets/logo.svg";
+import { useQuery } from "@tanstack/react-query";
 
 const navigation = [
     { name: "Our Services", href: "#", current: true },
@@ -33,31 +34,58 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const { user, token } = useSelector((state) => state.auth);
+    //     const getProfile = async (token) => {
+    //         // fetch get profile
+    //         const result = await profile();
+    //         if (result.success) {
+    //             // set the user state here
+    //             dispatch(setUser(result.data));
+    //             return;
+    //         }
+
+    //         // If not success
+    //         // delete the local storage here
+    //         dispatch(setUser(null));
+    //         dispatch(setToken(null));
+
+    //         // redirect to login
+    //         navigate({ to: "/login" });
+    //     };
+
+    //     if (token) {
+    //         // hit api auth get profile and pass the token to the function
+    //         getProfile(token);
+    //     }
+    // }, [dispatch, navigate, token]);
+
+    const handleLogout = useCallback(() => {
+      // delete the local storage here
+      dispatch(setUser(null));
+      dispatch(setToken(null));
+
+      // redirect to login
+      navigate({ to: "/login" });
+    }, [dispatch, navigate]);
+
+    // use react query to fetch API
+    const { data, isSuccess, isError } = useQuery({
+        queryKey: ["profile"],
+        queryFn: profile,
+        enabled: token ? true : false,
+    });
 
     useEffect(() => {
-        const getProfile = async (token) => {
-            // fetch get profile
-            const result = await profile();
-            if (result.success) {
-                // set the user state here
-                dispatch(setUser(result.data));
-                return;
-            }
+      if (isSuccess) {
+        dispatch(setUser(data));
+      } else if (isError) {
+        handleLogout();
+      }
+    }, [isSuccess, isError, data, dispatch, handleLogout]);
 
-            // If not success
-            // delete the local storage here
-            dispatch(setUser(null));
-            dispatch(setToken(null));
-
-            // redirect to login
-            navigate({ to: "/login" });
-        };
-
-        if (token) {
-            // hit api auth get profile and pass the token to the function
-            getProfile(token);
-        }
-    }, [dispatch, navigate, token]);
+    const logout = (event) => {
+        event.preventDefault();
+        handleLogout();
+    };
 
     return (
         <Disclosure as="nav" className="bg-[#F1F3FF]">

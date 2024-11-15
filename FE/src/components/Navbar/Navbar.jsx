@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import "./Navbar.css";
 import profilePicture from "../../assets/icon/profilePicture.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "@tanstack/react-router";
 import { profile } from "../../service/auth/auth.service";
 import { setToken, setUser } from "../../redux/slices/auth";
+import { useQuery } from "@tanstack/react-query";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -12,40 +13,33 @@ const Navbar = () => {
 
   const { user, token } = useSelector((state) => state.auth);
 
+  const handleLogout = useCallback(() => {
+    // delete the local storage here
+    dispatch(setUser(null));
+    dispatch(setToken(null));
+
+    // redirect to login
+    navigate({ to: "/login" });
+  }, [dispatch, navigate]);
+
+  // Use react query to fetch API
+  const {data, isSuccess, isError} = useQuery({
+    queryKey: ["profileAdmin"],
+    queryFn: profile,
+    enabled: token ? true : false,
+  });
+
   useEffect(() => {
-    const getProfile = async (token) => {
-      // fetch get profile
-      const result = await profile();
-      if (result.success) {
-        // set the user state here
-        dispatch(setUser(result.data));
-        return;
-      }
-
-      // If not success
-      // delete the local storage here
-      dispatch(setUser(null));
-      dispatch(setToken(null));
-
-      // redirect to login
-      navigate({ to: "/login" });
-    };
-
-    if(token) {
-      // hit api auth get profile and pass the token to the function
-      getProfile(token);
+    if(isSuccess){
+      dispatch(setUser(data));
+    }else if (isError) {
+      handleLogout()
     }
-  }, [dispatch, navigate, token]);
+  }, [isSuccess, isError, data, dispatch, handleLogout]);
 
     const logout = (event) => {
       event.preventDefault();
-
-      // delete the local storage here
-      dispatch(setUser(null));
-      dispatch(setToken(null));
-
-      // redirect to login
-      navigate({ to: "/login" });
+      handleLogout();
     };
 
   return (
