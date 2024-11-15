@@ -4,7 +4,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const Banner = () => {
+const Header = () => {
   const location = useLocation();
   const [productSegment, setProductSegment] = useState("");
 
@@ -13,7 +13,7 @@ const Banner = () => {
     const pathSegments = currentUrl.split("/");
     const extractedSegment = pathSegments[1];
     setProductSegment(extractedSegment);
-    console.log(extractedSegment);
+    // console.log(extractedSegment);
   }, [location]);
 
   return (
@@ -34,7 +34,6 @@ const Banner = () => {
                 className="bg-[#5CB85F] text-white py-2 px-4 rounded mt-4 inline-block hover:bg-[#4DAE4A] active:bg-[#3b8d39] focus:outline-none focus:ring-2 focus:ring-[#4DAE4A] focus:ring-opacity-50"
                 as={Link}
                 to="/searchCar"
-                href="#"
               >
                 Mulai Sewa Mobil
               </Button>
@@ -49,4 +48,4 @@ const Banner = () => {
   );
 };
 
-export default Banner;
+export default Header;

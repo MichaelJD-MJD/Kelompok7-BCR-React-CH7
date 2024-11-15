@@ -65,11 +65,13 @@ const Navbar = () => {
                 <div className="relative flex h-20 items-center justify-between">
                     <div className="flex flex-1 items-center justify-start sm:items-stretch sm:justify-between">
                         <div className="flex shrink-0 items-center">
-                            <img
-                                alt="Rental Car"
-                                src={logo}
-                                className="h-8 w-auto"
-                            />
+                            <a href="/">
+                                <img
+                                    alt="Rental Car"
+                                    src={logo}
+                                    className="h-8 w-auto"
+                                />
+                            </a>
                         </div>
                         <div className="hidden md:ml-6 lg:block">
                             <div className="flex space-x-4">
@@ -167,7 +169,15 @@ const Navbar = () => {
                 </div>
             </div>
 
-            <DisclosurePanel className="lg:hidden static container">                
+            <DisclosurePanel
+                className="lg:hidden fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white w-80 dark:bg-gray-800"
+                tabIndex="-1"
+                aria-labelledby="offcanvaslabel"
+            >
+                <a href="/"id="offcanvaslabel" aria-hidden="true">
+                    <img alt="Rental Car" src={logo} className="h-8 w-auto" />
+                </a>
+                <XMarkIcon data-drawer-hide="offcanvas" aria-controls="offcanvas" className="hidden size-6 group-data-[open]:block" />
                 <div className="space-y-1 px-2 pb-3 pt-2">
                     {navigation.map((item) => (
                         <DisclosureButton

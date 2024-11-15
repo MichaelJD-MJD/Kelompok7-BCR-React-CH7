@@ -1,7 +1,8 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 // import Protected from "../components/Auth/Protected";
-import Banner from '../components/User/Banner/Banner'
 import SearchBar from '../components/User/SearchBar/SearchBar'
+import Header from '../components/User/Header/Header'
+import Footer from '../components/User/Footer/Footer'
 
 export const Route = createLazyFileRoute('/searchCar')({
   component: () => (
@@ -13,12 +14,10 @@ export const Route = createLazyFileRoute('/searchCar')({
 
 function SearchCar() {
   return (
-    <div className="flex flex-col">
-      <Banner />
-      <SearchBar />
-      {/* <Container> */}
-
-      {/* </Container> */}
-    </div>
-  )
+      <>
+          <Header />
+          <SearchBar />
+          <Footer />
+      </>
+  );
 }
