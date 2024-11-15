@@ -7,6 +7,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { createType } from "../../../service/types-service";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 import Protected from "../../../components/Auth/Protected";
 
 export const Route = createLazyFileRoute("/admin/types-routes/create")({
@@ -19,24 +20,34 @@ export const Route = createLazyFileRoute("/admin/types-routes/create")({
 
 function CreateType() {
   const navigate = useNavigate();
-
   const [type, setType] = useState("");
   const [description, setDescription] = useState("");
 
-  const onSubmit = async (event) => {
+  // Use useMutation with mutationFn
+  const mutation = useMutation({
+    mutationFn: createType, // Pass the function that returns a promise
+    onSuccess: (data) => {
+      if (data?.success) {
+        toast.success("Type created successfully!");
+        navigate({ to: "/admin/types-routes/types" });
+      } else {
+        toast.error(data?.message || "Something went wrong.");
+      }
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Error occurred.");
+    },
+  });
+
+  const onSubmit = (event) => {
     event.preventDefault();
 
     const request = {
       type,
       description,
     };
-    const result = await createType(request);
-    if (result?.success) {
-      navigate({ to: "/admin/types-routes/types" });
-      return;
-    }
 
-    toast.error(result?.message);
+    mutation.mutate(request);
   };
 
   return (
@@ -84,8 +95,12 @@ function CreateType() {
                 </Col>
               </Form.Group>
               <div className="d-grid gap-2">
-                <Button type="submit" variant="primary">
-                  Create Student
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={mutation.isLoading}
+                >
+                  {mutation.isLoading ? "Creating..." : "Create Type"}
                 </Button>
               </div>
             </Form>
