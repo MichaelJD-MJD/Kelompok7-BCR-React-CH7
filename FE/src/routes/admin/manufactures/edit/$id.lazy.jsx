@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Row, Col, Card, Form, Button, Image } from "react-bootstrap";
 import "../../../../styles/manufactures/manufacture.css";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const Route = createLazyFileRoute("/admin/manufactures/edit/$id")({
     component: () => (
@@ -29,30 +30,34 @@ function EditManufacture() {
     const [logo, setLogo] = useState(undefined);
     const [currentLogo, setCurrentLogo] = useState(undefined);
 
-    const [isNotFound, setIsNotFound] = useState(false);
+    const { data, isSuccess, isError } = useQuery({
+        queryKey: ["manufacture", id],
+        queryFn: () => getDetailManufacture(id),
+        enabled: !!id,
+    });
+
+    const { mutate: updateManufactureMutation, isPending:isUpdateProcessing } = useMutation({
+        mutationFn: (request) => updateManufacture(id, request),
+        onSuccess: () => {
+            navigate({ to: "/admin/manufactures" });
+        },
+        onError: (error) => {
+            toast.error(error?.message);
+        },
+    });
 
     useEffect(() => {
-        const getDetailManufactureData = async (id) => {
-            const result = await getDetailManufacture(id);
-            if (result?.success) {
-                setName(result.data?.name);
-                setDescription(result.data?.description);
-                setEstablishment(result.data?.establishment);
-                setCountry(result.data?.country);
-                setOffice(result.data?.office);
-                setCurrentLogo(result.data?.logo);
-                setIsNotFound(false);
-            } else {
-                setIsNotFound(true);
-            }
-        };
-
-        if (id) {
-            getDetailManufactureData(id);
+        if (isSuccess) {
+            setName(data.data?.name);
+            setDescription(data.data?.description);
+            setEstablishment(data.data?.establishment);
+            setCountry(data.data?.country);
+            setOffice(data.data?.office);
+            setCurrentLogo(data.data?.logo);
         }
-    }, [id]);
+    }, [isSuccess, data]);
 
-    if (isNotFound) {
+    if (isError) {
         navigate({ to: "/manufactures" });
         return;
     }
@@ -68,13 +73,7 @@ function EditManufacture() {
             office,
             logo,
         };
-        const result = await updateManufacture(id, request);
-        if (result?.success) {
-            navigate({ to: `/admin/manufactures` });
-            return;
-        }
-
-        toast.error(result?.message);
+        updateManufactureMutation(request);
     };
 
     return (
@@ -236,7 +235,7 @@ function EditManufacture() {
                                     </Col>
                                 </Form.Group>
                                 <div className="d-grid gap-2">
-                                    <Button type="submit" variant="primary">
+                                    <Button type="submit" disabled={isUpdateProcessing} variant="primary">
                                         Edit Manufacture
                                     </Button>
                                 </div>

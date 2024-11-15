@@ -3,37 +3,35 @@ import { Button, Card, Col, Row } from "react-bootstrap";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getDetailManufacture } from "../../../service/manufacture";
+import { useQuery } from "@tanstack/react-query";
+import Protected from "../../../components/Auth/Protected";
 
 export const Route = createLazyFileRoute("/admin/manufactures/$id")({
-    component: ManufactureDetail,
+    component: () => (
+      <Protected roles={[1]}>
+        <ManufactureDetail />
+      </Protected>
+    ),
 });
 
 function ManufactureDetail() {
     const { id } = Route.useParams();
 
     const [manufacture, setManufacture] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isNotFound, setIsNotFound] = useState(false);
+
+    const { data, isSuccess, isPending, isError } = useQuery({
+        queryKey: ["manufacture", id],
+        queryFn: () => getDetailManufacture(id),
+        enabled: !!id,
+    });
 
     useEffect(() => {
-        const getDetailManufactureData = async (id) => {
-            setIsLoading(true);
-            const result = await getDetailManufacture(id);
-            if (result?.success) {
-                setManufacture(result.data);
-                setIsNotFound(false);
-            } else {
-                setIsNotFound(true);
-            }
-            setIsLoading(false);
-        };
-
-        if (id) {
-            getDetailManufactureData(id);
+        if (isSuccess) {
+            setManufacture(data.data);
         }
-    }, [id]);
+    }, [isSuccess, data]);
 
-    if (isLoading) {
+    if (isPending) {
         return (
             <Row className="mt-5">
                 <Col>
@@ -43,11 +41,11 @@ function ManufactureDetail() {
         );
     }
 
-    if (isNotFound) {
+    if (isError) {
         return (
             <Row className="mt-5">
                 <Col>
-                    <h1 className="text-center">Not Found</h1>
+                    <h1 className="text-center">Manufacture is not found</h1>
                 </Col>
             </Row>
         );

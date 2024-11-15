@@ -9,26 +9,33 @@ import { deleteManufacture } from "../../service/manufacture";
 import { useState } from "react";
 import beepImg from "../../assets/img-BeepBeep.png";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 const ManufactureItem = ({ manufacture }) => {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.auth);
   const [showModal, setShowModal] = useState(false);
-  const [manufactureToDelete, setManufactureToDelete] = useState(null);
+
+  const { mutate: deleteManufactureMutation } = useMutation({
+    mutationFn: (id) => deleteManufacture(id),
+    onSuccess: () => {
+      navigate({ to: "/admin/manufactures" });
+      window.location.reload();
+    },
+    onError: (error) => {
+      toast.error(error?.message);
+    },
+  });
 
   const onDelete = async (e) => {
     e.preventDefault();
-    if (manufactureToDelete) {
-      const result = await deleteManufacture(manufactureToDelete.id);
-      if (result?.success) {
-        navigate({ to: "/admin/manufactures" });
-        window.location.reload();
-      } else {
-        alert(result?.message);
-      }
-      setShowModal(false);
-    }
+
+    deleteManufactureMutation(manufacture.id);
+
+    setShowModal(false);
+
   };
 
   const handleNavigateToDetail = () => {
@@ -71,7 +78,6 @@ const ManufactureItem = ({ manufacture }) => {
                   data-bs-toggle="modal"
                   data-bs-target="#deleteConfirmation"
                   onClick={(e) => {
-                    setManufactureToDelete(manufacture);
                     setShowModal(true);
                     e.stopPropagation();
                   }}
