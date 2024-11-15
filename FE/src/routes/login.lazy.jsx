@@ -1,15 +1,17 @@
 import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import bannerImg from '../assets/login.png'
-import logo from '../assets/icon/logo.png'
-import "../styles/login.css"
+import bannerImg from "../assets/login.png";
+import logo from "../assets/icon/logo.png";
+import "../styles/login.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { login } from "../service/auth/auth.service";
 import { setToken } from "../redux/slices/auth";
+import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
-export const Route = createLazyFileRoute('/login')({
+export const Route = createLazyFileRoute("/login")({
   component: Login,
-})
+});
 
 function Login() {
   const dispatch = useDispatch();
@@ -20,35 +22,38 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if(token) {
-      navigate({to: "/"});
-    }
-  }, [navigate, token]);
+  if (token) {
+    navigate({ to: "/" });
+  }
+
+  const { mutate: loginUser } = useMutation({
+    mutationFn: (body) => {
+      return login(body);
+    },
+    onSuccess: (data) => {
+      // set token to global state
+      dispatch(setToken(data?.token));
+
+      // redirect to home
+      navigate({ to: "/" });
+    },
+    onError: (err) => {
+      toast.error(err?.message);
+    },
+  });
 
   const onSubmit = async (event) => {
     event.preventDefault();
 
     // define the request body
     const body = {
-      email, password,
+      email,
+      password,
     };
 
     // hit the login API with the data
-    const result = await login(body);
-
-    if(result.success){
-      // set token to global state
-      dispatch(setToken(result.data.token));
-
-      // redirect to home
-      navigate({to:"/"});
-      return;
-    }
-
-    alert (result.message);
-  }
+    loginUser(body);
+  };
 
   return (
     <div className="container-fluid login-container">
