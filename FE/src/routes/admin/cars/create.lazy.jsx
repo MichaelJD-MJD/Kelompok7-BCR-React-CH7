@@ -4,6 +4,10 @@ import "../../../styles/add-car.css";
 import { createCar } from "../../../service/car/car.service.index";
 import { getTypes } from "../../../service/types-service";
 import Protected from "../../../components/Auth/Protected";
+import { getManufacture } from "../../../service/manufacture";
+import { toast } from "react-toastify";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Row } from "react-bootstrap";
 
 export const Route = createLazyFileRoute("/admin/cars/create")({
   component: () => (
@@ -17,7 +21,6 @@ function CreateCar() {
   const navigate = useNavigate();
 
   const [plate, setPlate] = useState("");
-  const [manufactures, setManufactures] = useState([]);
   const [manufactureId, setManufactureId] = useState("");
   const [model, setModel] = useState("");
   const [rentPerDay, setRentPerDay] = useState("");
@@ -26,7 +29,6 @@ function CreateCar() {
   const [availableAt, setAvailableAt] = useState("");
   const [transmission, setTransmission] = useState("");
   const [available, setAvailable] = useState("");
-  const [types, setTypes] = useState([]);
   const [typeId, setTypeId] = useState("");
   const [year, setYear] = useState("");
   const [options, setOptions] = useState([]);
@@ -34,55 +36,47 @@ function CreateCar() {
   const [image, setImage] = useState("");
   const [currentImage, setCurrentImage] = useState("");
 
-  const getManufactures = async () => {
-    const token = localStorage.getItem("token");
+  const { data : manufactures} = useQuery({
+    queryKey: ["manufacture"],
+    queryFn: () => getManufacture(),
+    enabled: true,
+  });
 
-    let url = `${import.meta.env.VITE_API_URL}/manufactures`;
+  const { data: types } = useQuery({
+    queryKey: ["types"],
+    queryFn: () => getTypes(),
+    enabled: true,
+  });
 
-    const response = await fetch(url, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-      method: "GET",
-    });
+  const { mutate: create, isPending } = useMutation({
+    mutationFn: (request) => createCar(request),
+    onSuccess: () => {
+      navigate({ to: "/admin/cars" });
+    },
+    onError: (error) => {
+      toast.error(error?.message);
+    },
+  });
 
-    // get data
-    const result = await response.json();
-    return result;
+  if (isPending) {
+    return (
+      <Row className="mt-4">
+        <h1>Loading...</h1>
+      </Row>
+    );
   }
-
-    useEffect(() => {
-      // ambil data manufacture
-      const getManufacturesData = async () => {
-        const result = await getManufactures();
-        if(result?.success) {
-          setManufactures(result?.data);
-        }
-      }
-
-      // ambil data types
-      const getTypesData = async () => {
-        const result = await getTypes();
-        if(result?.success) {
-          setTypes(result?.data);
-        }
-      };
-
-      getManufacturesData();
-      getTypesData();
-    }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();
 
-     const optionsArray =
-       typeof options === "string"
-         ? options.split(",").map((item) => item.trim())
-         : options;
-     const specsArray =
-       typeof specs === "string"
-         ? specs.split(",").map((item) => item.trim())
-         : specs;
+    const optionsArray =
+      typeof options === "string"
+        ? options.split(",").map((item) => item.trim())
+        : options;
+    const specsArray =
+      typeof specs === "string"
+        ? specs.split(",").map((item) => item.trim())
+        : specs;
 
     const request = {
       plate,
@@ -101,15 +95,7 @@ function CreateCar() {
       image,
     };
 
-    console.log(request);
-
-    const result = await createCar(request);
-    if (result?.success) {
-      navigate({ to: "/admin/cars" });
-      return;
-    }
-
-    alert(result?.message);
+    create(request);
   };
 
   return (
@@ -151,8 +137,9 @@ function CreateCar() {
               <option selected disabled>
                 Select Manufacture
               </option>
-              {manufactures.length > 0 &&
-                manufactures.map((manufacture) => (
+              {manufactures?.data &&
+                manufactures.data?.length > 0 &&
+                manufactures.data.map((manufacture) => (
                   <option key={manufacture?.id} value={manufacture.id}>
                     {manufacture.name}
                   </option>
@@ -299,13 +286,13 @@ function CreateCar() {
               <option selected disabled>
                 Select Types
               </option>
-              {types.length > 0 &&
-                types.map((type) =>(
-                    <option value={type.id} key={type?.id}>
-                      {type.type}
-                    </option>
-                  )
-                )}
+              {types?.data &&
+                types.data?.length > 0 &&
+                types.data.map((type) => (
+                  <option value={type.id} key={type?.id}>
+                    {type.type}
+                  </option>
+                ))}
             </select>
           </div>
         </div>

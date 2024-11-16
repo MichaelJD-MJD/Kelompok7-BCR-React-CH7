@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import "../../../../styles/update-car.css";
-import { getDetailCar, updateStudent } from "../../../../service/car/car.service.index";
+import { getDetailCar, updateCar } from "../../../../service/car/car.service.index";
 import { getTypes } from "../../../../service/types-service";
 import Protected from "../../../../components/Auth/Protected";
+import { getManufacture } from "../../../../service/manufacture";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { Col, Row } from "react-bootstrap";
 
 export const Route = createLazyFileRoute("/admin/cars/edit/$id")({
   component: () => (
@@ -18,7 +22,6 @@ function EditCar() {
   const navigate = useNavigate();
 
   const [plate, setPlate] = useState("");
-  const [manufactures, setManufactures] = useState([]);
   const [manufactureId, setManufactureId] = useState("");
   const [model, setModel] = useState("");
   const [rentPerDay, setRentPerDay] = useState("");
@@ -27,7 +30,6 @@ function EditCar() {
   const [availableAt, setAvailableAt] = useState("");
   const [transmission, setTransmission] = useState("");
   const [available, setAvailable] = useState("");
-  const [types, setTypes] = useState([]);
   const [typeId, setTypeId] = useState("");
   const [year, setYear] = useState("");
   const [options, setOptions] = useState([]);
@@ -36,73 +38,71 @@ function EditCar() {
   const [currentImage, setCurrentImage] = useState("");
   const [isNotFound, setIsNotFound] = useState(false);
 
-const getManufactures = async () => {
-  const token = localStorage.getItem("token");
-
-  let url = `${import.meta.env.VITE_API_URL}/manufactures`;
-
-  const response = await fetch(url, {
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-    method: "GET",
+  const { data: manufactures } = useQuery({
+    queryKey: ["manufactures"],
+    queryFn: () => getManufacture(),
+    enabled: !!id,
   });
 
-  // get data
-  const result = await response.json();
-  return result;
-};
+  const { data: types } = useQuery({
+    queryKey: ["types"],
+    queryFn: () => getTypes(),
+    enabled: !!id,
+  });
+
+  const { data: car, isSuccess, isError } = useQuery( {
+    queryKey: ["car", id],
+    queryFn: () => getDetailCar(id),
+    enabled: !!id,
+  });
+
+  console.log(car);
+
+  const { mutate: update, isPending: isUpdateProcessing } = useMutation({
+    mutationFn: (request) => updateCar(id, request),
+    onSuccess: () => {
+      navigate({to: "/admin/cars"});
+    },
+    onError: (error) => {
+      toast.error(error?.message);
+    }
+  });
 
   useEffect(() => {
-    // ambil data manufacture
-    const getManufacturesData = async () => {
-      const result = await getManufactures();
-      if (result?.success) {
-        setManufactures(result?.data);
-      }
-    };
-
-    // ambil data types
-    const getTypesData = async () => {
-      const result = await getTypes();
-      if (result?.success) {
-        setTypes(result?.data);
-      }
-    };
-
-    getManufacturesData();
-    getTypesData();
-  }, []);
-
-  useEffect(() => {
-    const getDetailCarData = async (id) => {
-      const result = await getDetailCar(id);
-      if(result?.success) {
-        const availableAtDate = result?.data.availableAt.split("T")[0];
-        setPlate(result?.data.plate);
-        setManufactureId(result?.data.manufacture_id);
-        setModel(result?.data.model);
-        setRentPerDay(result?.data.rentPerDay);
-        setCapacity(result?.data.capacity);
-        setDescription(result?.data.description);
-        setAvailableAt(availableAtDate);
-        setTransmission(result?.data.transmission);
-        setAvailable(result?.data.available);
-        setTypeId(result?.data.type_id);
-        setYear(result?.data.year);
-        setOptions(result?.data.options);
-        setSpecs(result?.data.specs);
-        setCurrentImage(result?.data.image);
-        setIsNotFound(false);
-      } else {
-        setIsNotFound(true);
-      }
+    if(isSuccess){
+      const availableAtDate = car?.availableAt.split("T")[0];
+      setPlate(car?.plate);
+      setManufactureId(car?.manufacture_id);
+      setModel(car?.model);
+      setRentPerDay(car?.rentPerDay);
+      setCapacity(car?.capacity);
+      setDescription(car?.description);
+      setAvailableAt(availableAtDate);
+      setTransmission(car?.transmission);
+      setAvailable(car?.available);
+      setTypeId(car?.type_id);
+      setYear(car?.year);
+      setOptions(car?.options);
+      setSpecs(car?.specs);
+      setCurrentImage(car?.image);
+      setIsNotFound(false);
     }
+  }, [car, isSuccess]);
 
-    if(id) {
-      getDetailCarData(id);
-    }
-  }, [id]);
+  if(isError) {
+    navigate({to: "/admin/cars"});
+    return;
+  }
+
+  if (isUpdateProcessing) {
+    return (
+      <Row className="mt-5">
+        <Col>
+          <h1 className="text-center">Loading...</h1>
+        </Col>
+      </Row>
+    );
+  }
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -133,13 +133,7 @@ const getManufactures = async () => {
       image,
     };
 
-    const result = await updateStudent(id, request);
-    if(result?.success) {
-      navigate({to: "/admin/cars"});
-      return;
-    }
-
-    alert(result?.message);
+    update(request);
   }
 
   return (
@@ -177,8 +171,8 @@ const getManufactures = async () => {
               <option selected disabled>
                 Select Manufacture
               </option>
-              {manufactures.length > 0 &&
-                manufactures.map((manufacture) => (
+              {manufactures?.data && manufactures.data?.length > 0 &&
+                manufactures.data.map((manufacture) => (
                   <option
                     key={manufacture?.id}
                     value={manufacture.id}
@@ -330,8 +324,8 @@ const getManufactures = async () => {
               <option selected disabled>
                 Select Types
               </option>
-              {types.length > 0 &&
-                types.map((type) => (
+              {types?.data && types.data?.length > 0 &&
+                types.data.map((type) => (
                   <option
                     value={type.id}
                     key={type?.id}

@@ -8,25 +8,32 @@ import "../../styles/list-car.css";
 import { deleteCar } from "../../service/car/car.service.index";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const CarItem = ({ car }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const [showModal, setShowModal] = useState(false); // State for modal visibility
-  const [carToDelete, setcarToDelete] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  const onDelete = async () => {
-    if (carToDelete) {
-      const result = await deleteCar(carToDelete.id);
-      if (result?.success) {
-        navigate({ to: "/admin/cars" });
-        window.location.reload();
-      } else {
-        alert(result?.message);
-      }
-      setShowModal(false);
-    }
+  const { mutate: deleteCarMutation } = useMutation({
+    mutationFn: (id) => deleteCar(id),
+    onSuccess: () => {
+      navigate({ to: "/admin/cars" });
+      window.location.reload();
+    },
+    onError: (error) => {
+      toast.error(error?.message);
+    } 
+  })
+
+  const onDelete = async (e) => {
+    e.preventDefault();
+
+    deleteCarMutation(car.id);
+    setShowModal(false);
   };
+
 
   return (
     <div className="col-3 mb-2 p-0">
@@ -56,7 +63,6 @@ const CarItem = ({ car }) => {
                 data-bs-toggle="modal"
                 data-bs-target="#deleteConfirmation"
                 onClick={(e) => {
-                  setcarToDelete(car);
                   setShowModal(true);
                   e.stopPropagation();
                 }}

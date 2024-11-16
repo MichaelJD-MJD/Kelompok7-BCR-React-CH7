@@ -34,7 +34,6 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const { user, token } = useSelector((state) => state.auth);
-    //     const getProfile = async (token) => {
     //         // fetch get profile
     //         const result = await profile();
     //         if (result.success) {

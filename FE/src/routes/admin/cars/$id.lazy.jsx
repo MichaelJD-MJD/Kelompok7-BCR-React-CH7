@@ -4,6 +4,8 @@ import { getDetailCar } from "../../../service/car/car.service.index";
 import { Button, Col, Row } from "react-bootstrap";
 import "../../../styles/list-car.css";
 import { getDetailType } from "../../../service/types-service";
+import { getDetailManufacture } from "../../../service/manufacture";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createLazyFileRoute("/admin/cars/$id")({
   component: CarDetail,
@@ -20,61 +22,52 @@ function CarDetail() {
   const [type, setType] = useState([]);
   const [manufacture, setManufacture] = useState([]);
 
-  const getDetailManufacture = async (id) => {
-    const token = localStorage.getItem("token");
+  const { data: detailManufacture, isSuccess: isSuccessManufacture } = useQuery({
+    queryKey: ["manufacture", car.manufacture_id],
+    queryFn: () => getDetailManufacture(car.manufacture_id),
+    enabled: !!car.manufacture_id,
+  });
 
-    let url = `${import.meta.env.VITE_API_URL}/manufactures/${id}`;
+  
 
-    const response = await fetch(url, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-      method: "GET",
-    });
+  const { data: detailType, isSuccess: isSuccessType } = useQuery({
+    queryKey: ["type", car.type_id],
+    queryFn: () => getDetailType(car.type_id),
+    enabled: !!car.type_id,
+  });
 
-    // get data
-    const result = await response.json();
-    return result;
-  };
+  
+
+  const { data, isSuccess, isPending, isError} = useQuery({
+    queryKey: ["cars", id],
+    queryFn: () => getDetailCar(id),
+    enabled: !!id,
+  });
 
   useEffect(() => {
-    const getDetaiCarData = async (id) => {
-      const result = await getDetailCar(id);
-      console.log(result);
-      if (result?.success) {
-        setCar(result.data);
-        setIsNotFound(false);
-      } else {
-        setIsNotFound(true);
-      }
-    };
-
-    if (id) {
-      getDetaiCarData(id);
+    if (isSuccess) {
+      setCar(data);
     }
-  }, [id]);
+    if (isSuccessType) {
+      setType(detailType.data);
+    }
+    if (isSuccessManufacture) {
+      setManufacture(detailManufacture.data);
+    }
 
-  useEffect(() => {
-    const getManufacturesData = async (id) => {
-      const result = await getDetailManufacture(id);
-      if (result?.success) {
-        setManufacture(result?.data);
-      }
-    };
+  }, [data, isSuccess, isSuccessManufacture, isSuccessType, detailManufacture, detailType]);
 
-    // ambil data types
-    const getTypesData = async (id) => {
-      const result = await getDetailType(id);
-      if (result?.success) {
-        setType(result?.data);
-      }
-    };
+  if (isPending) {
+    return (
+      <Row className="mt-5">
+        <Col>
+          <h1 className="text-center">Loading...</h1>
+        </Col>
+      </Row>
+    );
+  }
 
-    getManufacturesData(car?.manufacture_id);
-    getTypesData(car?.type_id);
-  }, [car.manufacture_id, car.type_id]);
-
-  if (isNotFound) {
+  if (isError) {
     return (
       <Row className="mt-5">
         <Col>

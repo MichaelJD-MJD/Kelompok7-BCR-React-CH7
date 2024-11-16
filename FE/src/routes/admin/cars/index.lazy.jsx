@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import CarItem from "../../../components/cars_components/CarItem";
 import { Col, Row } from "react-bootstrap";
 import Protected from "../../../components/Auth/Protected";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createLazyFileRoute("/admin/cars/")({
   component: () => (
@@ -21,18 +22,18 @@ function Cars() {
 
   const [cars, setCars] = useState([]);
 
-  useEffect(() => {
-    const getCarData = async () => {
-      const result = await getCars();
-      if (result.success) {
-        setCars(result.data);
-      }
-    };
+  // use react query to fetch API
+  const { data, isSuccess, isPending } = useQuery({
+    queryKey: ["cars"],
+    queryFn: () => getCars(),
+    enabled: !!token,
+  });
 
-    if (token) {
-      getCarData();
+  useEffect(() => {
+    if(isSuccess) {
+      setCars(data);
     }
-  }, [token]);
+  }, [data, isSuccess])
 
   if (!token) {
     return (
@@ -40,6 +41,14 @@ function Cars() {
         <Col>
           <h1 className="text-center">Please login first to get car data!</h1>
         </Col>
+      </Row>
+    );
+  }
+
+  if(isPending) {
+    return (
+      <Row className="mt-4">
+        <h1>Loading...</h1>
       </Row>
     );
   }

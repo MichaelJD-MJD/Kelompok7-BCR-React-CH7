@@ -12,7 +12,11 @@ export const getCars = async () => {
 
     // get data
     const result = await response.json();
-    return result;
+    if (!result?.success) {
+      throw new Error(result?.message);
+    }
+
+    return result?.data;
 }
 
 export const getDetailCar = async (id) => {
@@ -28,7 +32,11 @@ export const getDetailCar = async (id) => {
 
     // get data
     const result = await response.json();
-    return result;
+    if (!result?.success) {
+      throw new Error(result?.message);
+    }
+
+    return result?.data;
 }
 
 export const createCar = async (request) => {
@@ -60,10 +68,14 @@ export const createCar = async (request) => {
 
     // get data
     const result = await response.json();
-    return result;
+    if (!result?.success) {
+      throw new Error(result?.message);
+    }
+
+    return result?.data;
 };
 
-export const updateStudent = async (id, request) => {
+export const updateCar = async (id, request) => {
     const token = localStorage.getItem("token");
 
     const formData = new FormData();
@@ -92,7 +104,11 @@ export const updateStudent = async (id, request) => {
 
     // get data
     const result = await response.json();
-    return result;
+    if (!result?.success) {
+      throw new Error(result?.message);
+    }
+
+    return result?.data;
 }
 
 export const deleteCar = async (id) => {
@@ -107,5 +123,9 @@ export const deleteCar = async (id) => {
 
     // get data
     const result = await response.json();
-    return result;
+    if (!result?.success) {
+      throw new Error(result?.message);
+    }
+
+    return result?.data;
 }
