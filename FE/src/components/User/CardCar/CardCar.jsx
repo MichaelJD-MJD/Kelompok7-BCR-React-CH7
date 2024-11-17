@@ -1,27 +1,25 @@
 import { Link } from "@tanstack/react-router";
 
 export default function CardCar({ car }) {
-    // const
-
     return (
         <div className="max-w-2/6 w-1/3  bg-white border border-gray-200 rounded-lg drop-shadow">
             <img
-                src="../src/assets/img_car.svg"
+                src={car.image}
                 alt=""
                 className="object-contain  h-56 w-full rounded-t-md pb-3"
             />
             <div className="p-3">
                 <div className="gap-3">
-                    <h6 className="">judul/tipe</h6>
-                    <h5>Rp harga/ hari</h5>
-                    <p>deskripsi</p>
+                    <h6 className="">{car.type}</h6>
+                    <h5>Rp {car.rentPerDay}/ hari</h5>
+                    <p>{car.description}</p>
                     <p className="gap-3 flex items-center">
                         <img
                             src="../src/assets/icon/fi_users.svg"
                             alt=""
                             className="w-6"
                         />{" "}
-                        4 orang
+                        {car.capacity} orang
                     </p>
                     <p className="gap-3 flex items-center">
                         <img
@@ -29,7 +27,7 @@ export default function CardCar({ car }) {
                             alt=""
                             className="w-6"
                         />{" "}
-                        Manual
+                        {car.transmission}
                     </p>
                     <p className="gap-3 flex items-center">
                         <img
@@ -37,7 +35,7 @@ export default function CardCar({ car }) {
                             alt=""
                             className="w-6"
                         />{" "}
-                        Tahun 2020
+                        Tahun {car.year}
                     </p>
                 </div>
                 <button className="w-full">

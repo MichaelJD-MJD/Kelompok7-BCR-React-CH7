@@ -1,131 +1,139 @@
-export const getCars = async () => {
-    const token = localStorage.getItem("token");
+export const getCars = async (date, capacity) => {
+  console.log(date);
+  const token = localStorage.getItem("token");
+  const params = new URLSearchParams();
+  if (date) {
+    params.append("availableAt", date);
+  }
+  if (capacity) {
+    params.append("capacity", capacity);
+  }
 
-    let url = `${import.meta.env.VITE_API_URL}/cars`;
+  let url = `${import.meta.env.VITE_API_URL}/cars?${params.toString()}`;
+  console.log(url);
 
-    const response = await fetch(url, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-      method: "GET",
-    });
+  const response = await fetch(url, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+    method: "GET",
+  });
 
-    // get data
-    const result = await response.json();
-    if (!result?.success) {
-      throw new Error(result?.message);
-    }
-
-    return result?.data;
-}
+  // get data
+  const result = await response.json();
+  if (!result?.success) {
+    throw new Error(result?.message);
+  }
+  return result?.data;
+};
 
 export const getDetailCar = async (id) => {
-    const token = localStorage.getItem("token");
-    let url = `${import.meta.env.VITE_API_URL}/cars/${id}`;
+  const token = localStorage.getItem("token");
+  let url = `${import.meta.env.VITE_API_URL}/cars/${id}`;
 
-    const response = await fetch(url, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-      method: "GET",
-    });
+  const response = await fetch(url, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+    method: "GET",
+  });
 
-    // get data
-    const result = await response.json();
-    if (!result?.success) {
-      throw new Error(result?.message);
-    }
+  // get data
+  const result = await response.json();
+  if (!result?.success) {
+    throw new Error(result?.message);
+  }
 
-    return result?.data;
-}
+  return result?.data;
+};
 
 export const createCar = async (request) => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    const formData = new FormData();
-    formData.append("plate", request.plate);
-    formData.append("manufacture_id", request.manufactureId);
-    formData.append("model", request.model);
-    formData.append("rentPerDay", request.rentPerDay);
-    formData.append("capacity", request.capacity);
-    formData.append("description", request.description);
-    formData.append("availableAt", request.availableAt);
-    formData.append("transmission", request.transmission);
-    formData.append("available", request.available);
-    formData.append("type_id", request.typeId);
-    formData.append("year", request.year);
-    formData.append("options", request.options);
-    formData.append("specs", request.specs);
-    formData.append("image", request.image);
+  const formData = new FormData();
+  formData.append("plate", request.plate);
+  formData.append("manufacture_id", request.manufactureId);
+  formData.append("model", request.model);
+  formData.append("rentPerDay", request.rentPerDay);
+  formData.append("capacity", request.capacity);
+  formData.append("description", request.description);
+  formData.append("availableAt", request.availableAt);
+  formData.append("transmission", request.transmission);
+  formData.append("available", request.available);
+  formData.append("type_id", request.typeId);
+  formData.append("year", request.year);
+  formData.append("options", request.options);
+  formData.append("specs", request.specs);
+  formData.append("image", request.image);
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/cars`, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-      method: "POST",
-      body: formData,
-    });
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/cars`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+    method: "POST",
+    body: formData,
+  });
 
-    // get data
-    const result = await response.json();
-    if (!result?.success) {
-      throw new Error(result?.message);
-    }
+  // get data
+  const result = await response.json();
+  if (!result?.success) {
+    throw new Error(result?.message);
+  }
 
-    return result?.data;
+  return result?.data;
 };
 
 export const updateCar = async (id, request) => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    const formData = new FormData();
-    formData.append("plate", request.plate);
-    formData.append("manufacture_id", request.manufactureId);
-    formData.append("model", request.model);
-    formData.append("rentPerDay", request.rentPerDay);
-    formData.append("capacity", request.capacity);
-    formData.append("description", request.description);
-    formData.append("availableAt", request.availableAt);
-    formData.append("transmission", request.transmission);
-    formData.append("available", request.available);
-    formData.append("type_id", request.typeId);
-    formData.append("year", request.year);
-    formData.append("options", request.options);
-    formData.append("specs", request.specs);
-    formData.append("image", request.image);
+  const formData = new FormData();
+  formData.append("plate", request.plate);
+  formData.append("manufacture_id", request.manufactureId);
+  formData.append("model", request.model);
+  formData.append("rentPerDay", request.rentPerDay);
+  formData.append("capacity", request.capacity);
+  formData.append("description", request.description);
+  formData.append("availableAt", request.availableAt);
+  formData.append("transmission", request.transmission);
+  formData.append("available", request.available);
+  formData.append("type_id", request.typeId);
+  formData.append("year", request.year);
+  formData.append("options", request.options);
+  formData.append("specs", request.specs);
+  formData.append("image", request.image);
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/${id}`, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-      method: "PUT",
-      body: formData,
-    });
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/${id}`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+    method: "PUT",
+    body: formData,
+  });
 
-    // get data
-    const result = await response.json();
-    if (!result?.success) {
-      throw new Error(result?.message);
-    }
+  // get data
+  const result = await response.json();
+  if (!result?.success) {
+    throw new Error(result?.message);
+  }
 
-    return result?.data;
-}
+  return result?.data;
+};
 
 export const deleteCar = async (id) => {
-     const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/${id}`, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-      method: "DELETE",
-    });
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/${id}`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+    method: "DELETE",
+  });
 
-    // get data
-    const result = await response.json();
-    if (!result?.success) {
-      throw new Error(result?.message);
-    }
+  // get data
+  const result = await response.json();
+  if (!result?.success) {
+    throw new Error(result?.message);
+  }
 
-    return result?.data;
-}
+  return result?.data;
+};

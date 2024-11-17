@@ -15,62 +15,88 @@ exports.getCars = async (query) => {
             },
         });
     } else {
+        const capacityNumber = Number(query.capacity);
+        const availableAt = query.availableAt ?  new Date(query.availableAt).toISOString() : null;
         const {
             plate,
             manufacture_id,
             model,
             rentPerDay,
-            capacity,
             transmission,
             available,
             type_id,
             year,
         } = query;
 
-        searchedCar = await prisma.cars.findMany({
-            where: {
-                OR: [
-                    {
-                        plate: plate
-                            ? { contains: plate, mode: "insensitive" }
-                            : undefined,
-                    },
-                    {
-                        model: model
-                            ? { contains: model, mode: "insensitive" }
-                            : undefined,
-                    },
-                    {
-                        transmission: transmission
-                            ? { contains: transmission, mode: "insensitive" }
-                            : undefined,
-                    },
-                    {
-                        rentPerDay: rentPerDay
-                            ? { equals: rentPerDay }
-                            : undefined,
-                    },
-                    { capacity: capacity ? { equals: capacity } : undefined },
-                    {
-                        available:
-                            available !== undefined
-                                ? { equals: available }
-                                : undefined,
-                    },
-                    {
-                        manufacture_id: manufacture_id
-                            ? { equals: manufacture_id }
-                            : undefined,
-                    },
-                    { type_id: type_id ? { equals: type_id } : undefined },
-                    { year: year ? { equals: year } : undefined },
+        if(capacityNumber && availableAt){
+            searchedCar = await prisma.cars.findMany({
+              where: {
+                AND: [
+                  {
+                    capacity: capacityNumber
+                      ? { gte: capacityNumber }
+                      : undefined,
+                  },
+                  {
+                    availableAt: availableAt
+                      ? { equals: availableAt }
+                      : undefined,
+                  },
                 ].filter(Boolean),
-            },
-            include: {
+              },
+              include: {
                 manufactures: true,
                 types: true,
-            },
-        });
+              },
+            });
+        }else {
+            searchedCar = await prisma.cars.findMany({
+                where: {
+                    OR: [
+                        {
+                            plate: plate
+                                ? { contains: plate, mode: "insensitive" }
+                                : undefined,
+                        },
+                        {
+                            model: model
+                                ? { contains: model, mode: "insensitive" }
+                                : undefined,
+                        },
+                        {
+                            transmission: transmission
+                                ? { contains: transmission, mode: "insensitive" }
+                                : undefined,
+                        },
+                        {
+                            rentPerDay: rentPerDay
+                                ? { equals: rentPerDay }
+                                : undefined,
+                        },
+                        { capacity: capacityNumber ? { gte: capacityNumber } : undefined },
+                        { availableAt: availableAt ? { equals: availableAt } : undefined },
+                        {
+                            available:
+                                available !== undefined
+                                    ? { equals: available }
+                                    : undefined,
+                        },
+                        {
+                            manufacture_id: manufacture_id
+                                ? { equals: manufacture_id }
+                                : undefined,
+                        },
+                        { type_id: type_id ? { equals: type_id } : undefined },
+                        { year: year ? { equals: year } : undefined },
+                    ].filter(Boolean),
+                },
+                include: {
+                    manufactures: true,
+                    types: true,
+                },
+            });
+        }
+
     }
 
     const serializedCars = JSONBigInt.stringify(searchedCar);
