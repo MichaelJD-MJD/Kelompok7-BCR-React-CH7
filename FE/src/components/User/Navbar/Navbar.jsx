@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import "./Navbar.css";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { profile } from "../../../service/auth/auth.service";
 import { setToken, setUser } from "../../../redux/slices/auth";
@@ -172,9 +172,9 @@ const Navbar = () => {
                                         </Menu>
                                     </div>
                                 ) : (
-                                    <Button className="bg-[#5CB85F] text-white rounded-md px-4 py-2 text-sm font-medium">
+                                    <Link to={"/register"} className="bg-[#5CB85F] text-white rounded-md px-4 py-2 text-sm font-medium">
                                         Register
-                                    </Button>
+                                    </Link>
                                 )}
                             </div>
                         </div>

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCars } from "../../../service/car/car.service.index";
 import CardCar from "../CardCar/CardCar";
 import { toast } from "react-toastify";
-import { Col, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 export default function SearchBar() {
   const [typeDriver, setTypeDriver] = useState("");
@@ -12,29 +12,45 @@ export default function SearchBar() {
   const [passangerCount, setPassangerCount] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [isNotFound, setIsNotFound] = useState(false);
+  const [queryEnabled, setQueryEnabled] = useState(false);
 
-  const { data, isSuccess, isError, error } = useQuery({
+  const { token } = useSelector((state) => state.auth);
+
+  const { data, isSuccess, isError, error, isFetching } = useQuery({
     queryKey: ["searchCar"],
     queryFn: () => getCars(date, passangerCount),
-    enabled: !!date && !!passangerCount, 
+    enabled: queryEnabled,
   });
 
   useEffect(() => {
     if (isSuccess) {
       if (data.length === 0) {
         setSearchResult([]);
+        setIsNotFound(true);
         toast.warning("No cars found matching the criteria.");
       } else {
         setSearchResult(data);
+        setIsNotFound(false);
       }
     } else if (isError) {
+      setSearchResult(null); // reset hasil pencarian jika ada error
+      setIsNotFound(true);
       toast.error(error?.message || "An error occurred while fetching data.");
     }
+    setQueryEnabled(false);
   }, [data, isSuccess, isError, error]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setShowResults(true); // Menampilkan hasil pencarian
+    if (!token) {
+      toast.error("You need to login first");
+    } else {
+      setSearchResult(null);
+      setIsNotFound(false);
+      setQueryEnabled(true);
+      setShowResults(true); // Menampilkan hasil pencarian
+    }
   };
 
   return (
@@ -67,6 +83,7 @@ export default function SearchBar() {
               <input
                 type="date"
                 id="date"
+                required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
@@ -93,6 +110,7 @@ export default function SearchBar() {
               <input
                 type="number"
                 id="passangerCount"
+                required
                 value={passangerCount}
                 onChange={(e) => setPassangerCount(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
@@ -109,19 +127,22 @@ export default function SearchBar() {
         </form>
       </div>
 
-      {showResults && searchResult.length === 0 && (
-        <Row className="mt-5">
-          <Col>
-            <h1 className="text-center">No cars found!</h1>
-          </Col>
-        </Row>
+      {isFetching && (
+        <div className="container w-4/5 flex flex-wrap">
+          <h1 className="text-center w-full text-2xl">Loading...</h1>
+        </div>
       )}
 
-      {showResults && searchResult.length > 0 && (
+      {showResults && (
         <div className="container w-4/5 flex flex-wrap">
-          {searchResult.map((car, index) => (
-            <CardCar key={index} car={car} />
-          ))}
+          {isNotFound ? (
+            <h1 className="text-center w-full text-4xl text-red-700 font-bold">
+              Car is not found!
+            </h1>
+          ) : (
+            searchResult &&
+            searchResult.map((car, index) => <CardCar key={index} car={car} />)
+          )}
         </div>
       )}
     </div>

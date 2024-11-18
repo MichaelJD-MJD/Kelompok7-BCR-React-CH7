@@ -1,5 +1,4 @@
 export const getCars = async (date, capacity) => {
-  console.log(date);
   const token = localStorage.getItem("token");
   const params = new URLSearchParams();
   if (date) {
@@ -10,7 +9,6 @@ export const getCars = async (date, capacity) => {
   }
 
   let url = `${import.meta.env.VITE_API_URL}/cars?${params.toString()}`;
-  console.log(url);
 
   const response = await fetch(url, {
     headers: {
