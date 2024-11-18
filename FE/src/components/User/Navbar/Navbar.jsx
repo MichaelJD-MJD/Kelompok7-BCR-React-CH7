@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import "./Navbar.css";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { profile } from "../../../service/auth/auth.service";
 import { setToken, setUser } from "../../../redux/slices/auth";
@@ -58,12 +58,12 @@ const Navbar = () => {
     // }, [dispatch, navigate, token]);
 
     const handleLogout = useCallback(() => {
-      // delete the local storage here
-      dispatch(setUser(null));
-      dispatch(setToken(null));
+        // delete the local storage here
+        dispatch(setUser(null));
+        dispatch(setToken(null));
 
-      // redirect to login
-      navigate({ to: "/login" });
+        // redirect to login
+        navigate({ to: "/login" });
     }, [dispatch, navigate]);
 
     // use react query to fetch API
@@ -74,11 +74,11 @@ const Navbar = () => {
     });
 
     useEffect(() => {
-      if (isSuccess) {
-        dispatch(setUser(data));
-      } else if (isError) {
-        handleLogout();
-      }
+        if (isSuccess) {
+            dispatch(setUser(data));
+        } else if (isError) {
+            handleLogout();
+        }
     }, [isSuccess, isError, data, dispatch, handleLogout]);
 
     const logout = (event) => {
@@ -92,13 +92,13 @@ const Navbar = () => {
                 <div className="relative flex h-20 items-center justify-between">
                     <div className="flex flex-1 items-center justify-start sm:items-stretch sm:justify-between">
                         <div className="flex shrink-0 items-center">
-                            <a href="/">
+                            <Link to="/">
                                 <img
                                     alt="Rental Car"
                                     src={logo}
                                     className="h-8 w-auto"
                                 />
-                            </a>
+                            </Link>
                         </div>
                         <div className="hidden md:ml-6 lg:block">
                             <div className="flex space-x-4">
@@ -134,7 +134,7 @@ const Navbar = () => {
                                                     </span>
                                                     <img
                                                         alt=""
-                                                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                                        src={user.profile_picture}
                                                         className="size-8 rounded-full"
                                                     />
                                                 </MenuButton>
@@ -144,28 +144,31 @@ const Navbar = () => {
                                                 className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                                             >
                                                 <MenuItem>
-                                                    <a
-                                                        href="#"
+                                                    <Link
+                                                        to="#"
                                                         className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                                                     >
                                                         Your Profile
-                                                    </a>
+                                                    </Link>
                                                 </MenuItem>
+                                                {user?.role_id === 1 ? (
                                                 <MenuItem>
-                                                    <a
-                                                        href="#"
+                                                    <Link
+                                                        to="/admin/cars"
                                                         className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                                                     >
-                                                        Settings
-                                                    </a>
-                                                </MenuItem>
+                                                        Admin Menu
+                                                    </Link>
+                                                </MenuItem> 
+                                                ) : null }
                                                 <MenuItem>
-                                                    <a
-                                                        href="#"
+                                                    <Link
+                                                        to="#"
+                                                        onClick={logout}
                                                         className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                                                     >
                                                         Sign out
-                                                    </a>
+                                                    </Link>
                                                 </MenuItem>
                                             </MenuItems>
                                         </Menu>
@@ -201,10 +204,14 @@ const Navbar = () => {
                 tabIndex="-1"
                 aria-labelledby="offcanvaslabel"
             >
-                <a href="/"id="offcanvaslabel" aria-hidden="true">
+                <a href="/" id="offcanvaslabel" aria-hidden="true">
                     <img alt="Rental Car" src={logo} className="h-8 w-auto" />
                 </a>
-                <XMarkIcon data-drawer-hide="offcanvas" aria-controls="offcanvas" className="hidden size-6 group-data-[open]:block" />
+                <XMarkIcon
+                    data-drawer-hide="offcanvas"
+                    aria-controls="offcanvas"
+                    className="hidden size-6 group-data-[open]:block"
+                />
                 <div className="space-y-1 px-2 pb-3 pt-2">
                     {navigation.map((item) => (
                         <DisclosureButton

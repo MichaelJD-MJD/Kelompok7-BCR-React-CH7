@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import "./Navbar.css";
 import profilePicture from "../../assets/icon/profilePicture.png";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { profile } from "../../service/auth/auth.service";
 import { setToken, setUser } from "../../redux/slices/auth";
 import { useQuery } from "@tanstack/react-query";
@@ -80,6 +80,11 @@ const Navbar = () => {
                   <a className="dropdown-item" href="#">
                     Profile
                   </a>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/">
+                    User Menu
+                  </Link>
                 </li>
                 <li>
                   <a className="dropdown-item" href="#" onClick={logout}>
