@@ -1,5 +1,6 @@
 import React from 'react'
 import "./Banner.css";
+import { Link } from '@tanstack/react-router';
 
 const Banner = () => {
   return (
@@ -11,9 +12,9 @@ const Banner = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
-          <a href="cariMobil.html" className="start-btn btn">
+          <Link to='/searchCar' className="start-btn btn">
             Mulai Sewa Mobil
-          </a>
+          </Link>
         </div>
       </div>
     </div>

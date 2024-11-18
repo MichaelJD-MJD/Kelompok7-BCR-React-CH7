@@ -48,7 +48,7 @@ export default function CardCar({ car }) {
 
                 <button className="w-full">
                     <Link
-                        to="#"
+                        to={`/searchCar/${car.id}`}
                         className="bg-[#5CB85F] text-white py-2 md:px-4 rounded mt-4 inline-block hover:bg-[#4DAE4A] active:bg-[#3b8d39] focus:outline-none focus:ring-2 focus:ring-[#4DAE4A] focus:ring-opacity-50 px-auto w-full self-end"
                     >
                         Pilih Mobil

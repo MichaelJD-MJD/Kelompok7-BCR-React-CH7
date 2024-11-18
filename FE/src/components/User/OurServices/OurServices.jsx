@@ -12,7 +12,7 @@ const OurService = () => {
   ];
 
   return (
-    <div className="flex flex-row py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div className="flex flex-row py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto" id="services">
       <div className="basis-1/2">
         <img src={imgService} alt="Service" className="" />
       </div>

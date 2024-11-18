@@ -16,10 +16,11 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const SearchCarLazyImport = createFileRoute('/searchCar')()
 const RegisterLazyImport = createFileRoute('/register')()
 const LoginLazyImport = createFileRoute('/login')()
 const IndexLazyImport = createFileRoute('/')()
+const SearchCarIndexLazyImport = createFileRoute('/searchCar/')()
+const SearchCarIdLazyImport = createFileRoute('/searchCar/$id')()
 const AdminManufacturesIndexLazyImport = createFileRoute(
   '/admin/manufactures/',
 )()
@@ -51,12 +52,6 @@ const AdminCarsEditIdLazyImport = createFileRoute('/admin/cars/edit/$id')()
 
 // Create/Update Routes
 
-const SearchCarLazyRoute = SearchCarLazyImport.update({
-  id: '/searchCar',
-  path: '/searchCar',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/searchCar.lazy').then((d) => d.Route))
-
 const RegisterLazyRoute = RegisterLazyImport.update({
   id: '/register',
   path: '/register',
@@ -74,6 +69,20 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const SearchCarIndexLazyRoute = SearchCarIndexLazyImport.update({
+  id: '/searchCar/',
+  path: '/searchCar/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/searchCar/index.lazy').then((d) => d.Route),
+)
+
+const SearchCarIdLazyRoute = SearchCarIdLazyImport.update({
+  id: '/searchCar/$id',
+  path: '/searchCar/$id',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/searchCar/$id.lazy').then((d) => d.Route))
 
 const AdminManufacturesIndexLazyRoute = AdminManufacturesIndexLazyImport.update(
   {
@@ -204,11 +213,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterLazyImport
       parentRoute: typeof rootRoute
     }
-    '/searchCar': {
-      id: '/searchCar'
+    '/searchCar/$id': {
+      id: '/searchCar/$id'
+      path: '/searchCar/$id'
+      fullPath: '/searchCar/$id'
+      preLoaderRoute: typeof SearchCarIdLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/searchCar/': {
+      id: '/searchCar/'
       path: '/searchCar'
       fullPath: '/searchCar'
-      preLoaderRoute: typeof SearchCarLazyImport
+      preLoaderRoute: typeof SearchCarIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/admin/cars/$id': {
@@ -304,7 +320,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
-  '/searchCar': typeof SearchCarLazyRoute
+  '/searchCar/$id': typeof SearchCarIdLazyRoute
+  '/searchCar': typeof SearchCarIndexLazyRoute
   '/admin/cars/$id': typeof AdminCarsIdLazyRoute
   '/admin/cars/create': typeof AdminCarsCreateLazyRoute
   '/admin/manufactures/$id': typeof AdminManufacturesIdLazyRoute
@@ -323,7 +340,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
-  '/searchCar': typeof SearchCarLazyRoute
+  '/searchCar/$id': typeof SearchCarIdLazyRoute
+  '/searchCar': typeof SearchCarIndexLazyRoute
   '/admin/cars/$id': typeof AdminCarsIdLazyRoute
   '/admin/cars/create': typeof AdminCarsCreateLazyRoute
   '/admin/manufactures/$id': typeof AdminManufacturesIdLazyRoute
@@ -343,7 +361,8 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
-  '/searchCar': typeof SearchCarLazyRoute
+  '/searchCar/$id': typeof SearchCarIdLazyRoute
+  '/searchCar/': typeof SearchCarIndexLazyRoute
   '/admin/cars/$id': typeof AdminCarsIdLazyRoute
   '/admin/cars/create': typeof AdminCarsCreateLazyRoute
   '/admin/manufactures/$id': typeof AdminManufacturesIdLazyRoute
@@ -364,6 +383,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/searchCar/$id'
     | '/searchCar'
     | '/admin/cars/$id'
     | '/admin/cars/create'
@@ -382,6 +402,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/searchCar/$id'
     | '/searchCar'
     | '/admin/cars/$id'
     | '/admin/cars/create'
@@ -400,7 +421,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/searchCar'
+    | '/searchCar/$id'
+    | '/searchCar/'
     | '/admin/cars/$id'
     | '/admin/cars/create'
     | '/admin/manufactures/$id'
@@ -420,7 +442,8 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   LoginLazyRoute: typeof LoginLazyRoute
   RegisterLazyRoute: typeof RegisterLazyRoute
-  SearchCarLazyRoute: typeof SearchCarLazyRoute
+  SearchCarIdLazyRoute: typeof SearchCarIdLazyRoute
+  SearchCarIndexLazyRoute: typeof SearchCarIndexLazyRoute
   AdminCarsIdLazyRoute: typeof AdminCarsIdLazyRoute
   AdminCarsCreateLazyRoute: typeof AdminCarsCreateLazyRoute
   AdminManufacturesIdLazyRoute: typeof AdminManufacturesIdLazyRoute
@@ -439,7 +462,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   LoginLazyRoute: LoginLazyRoute,
   RegisterLazyRoute: RegisterLazyRoute,
-  SearchCarLazyRoute: SearchCarLazyRoute,
+  SearchCarIdLazyRoute: SearchCarIdLazyRoute,
+  SearchCarIndexLazyRoute: SearchCarIndexLazyRoute,
   AdminCarsIdLazyRoute: AdminCarsIdLazyRoute,
   AdminCarsCreateLazyRoute: AdminCarsCreateLazyRoute,
   AdminManufacturesIdLazyRoute: AdminManufacturesIdLazyRoute,
@@ -467,7 +491,8 @@ export const routeTree = rootRoute
         "/",
         "/login",
         "/register",
-        "/searchCar",
+        "/searchCar/$id",
+        "/searchCar/",
         "/admin/cars/$id",
         "/admin/cars/create",
         "/admin/manufactures/$id",
@@ -491,8 +516,11 @@ export const routeTree = rootRoute
     "/register": {
       "filePath": "register.lazy.jsx"
     },
-    "/searchCar": {
-      "filePath": "searchCar.lazy.jsx"
+    "/searchCar/$id": {
+      "filePath": "searchCar/$id.lazy.jsx"
+    },
+    "/searchCar/": {
+      "filePath": "searchCar/index.lazy.jsx"
     },
     "/admin/cars/$id": {
       "filePath": "admin/cars/$id.lazy.jsx"

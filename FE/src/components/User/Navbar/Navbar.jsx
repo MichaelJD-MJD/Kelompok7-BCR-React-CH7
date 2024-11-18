@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import "./Navbar.css";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,15 +19,15 @@ import logo from "../../../assets/logo.svg";
 import { useQuery } from "@tanstack/react-query";
 
 const navigation = [
-    { name: "Our Services", href: "#", current: true },
-    { name: "Why Us", href: "#", current: false },
-    { name: "Testimonial", href: "#", current: false },
-    { name: "FAQ", href: "#", current: false },
+    { name: "Our Services", href: "/#services" },
+    { name: "Why Us", href: "/#whyus" },
+    { name: "Testimonial", href: "/#testimonial" },
+    { name: "FAQ", href: "/#faq" },
 ];
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
+// function classNames(...classes) {
+//     return classes.filter(Boolean).join(" ");
+// }
 
 const Navbar = () => {
     const dispatch = useDispatch();
@@ -87,9 +87,9 @@ const Navbar = () => {
     };
 
     return (
-        <Disclosure as="nav" className="bg-[#F1F3FF]">
+        <Disclosure as="nav" className="bg-[#F1F3FF] fixed w-full">
             <div className="mx-auto container px-2 sm:px-6 lg:px-8 ">
-                <div className="relative flex h-20 items-center justify-between">
+                <div className="flex h-20 items-center justify-between">
                     <div className="flex flex-1 items-center justify-start sm:items-stretch sm:justify-between">
                         <div className="flex shrink-0 items-center">
                             <Link to="/">
@@ -103,21 +103,16 @@ const Navbar = () => {
                         <div className="hidden md:ml-6 lg:block">
                             <div className="flex space-x-4">
                                 {navigation.map((item) => (
-                                    <a
+                                    <Link
                                         key={item.name}
-                                        href={item.href}
+                                        to={item.href}
                                         aria-current={
                                             item.current ? "page" : undefined
                                         }
-                                        className={classNames(
-                                            item.current
-                                                ? "bg-blue-600 text-white"
-                                                : "hover:bg-blue-400 hover:text-white",
-                                            "rounded-md px-3 py-2 text-sm font-medium"
-                                        )}
+                                        className="hover:bg-blue-400 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
                                     >
                                         {item.name}
-                                    </a>
+                                    </Link>
                                 ))}
                                 {user ? (
                                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -134,7 +129,9 @@ const Navbar = () => {
                                                     </span>
                                                     <img
                                                         alt=""
-                                                        src={user.profile_picture}
+                                                        src={
+                                                            user.profile_picture
+                                                        }
                                                         className="size-8 rounded-full"
                                                     />
                                                 </MenuButton>
@@ -152,15 +149,15 @@ const Navbar = () => {
                                                     </Link>
                                                 </MenuItem>
                                                 {user?.role_id === 1 ? (
-                                                <MenuItem>
-                                                    <Link
-                                                        to="/admin/cars"
-                                                        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                                                    >
-                                                        Admin Menu
-                                                    </Link>
-                                                </MenuItem> 
-                                                ) : null }
+                                                    <MenuItem>
+                                                        <Link
+                                                            to="/admin/cars"
+                                                            className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                                                        >
+                                                            Admin Menu
+                                                        </Link>
+                                                    </MenuItem>
+                                                ) : null}
                                                 <MenuItem>
                                                     <Link
                                                         to="#"
@@ -174,7 +171,10 @@ const Navbar = () => {
                                         </Menu>
                                     </div>
                                 ) : (
-                                    <Link to={"/register"} className="bg-[#5CB85F] text-white rounded-md px-4 py-2 text-sm font-medium">
+                                    <Link
+                                        to={"/register"}
+                                        className="bg-[#5CB85F] text-white rounded-md px-4 py-2 text-sm font-medium"
+                                    >
                                         Register
                                     </Link>
                                 )}
@@ -217,14 +217,9 @@ const Navbar = () => {
                         <DisclosureButton
                             key={item.name}
                             as="a"
-                            href={item.href}
+                            to={item.href}
                             aria-current={item.current ? "page" : undefined}
-                            className={classNames(
-                                item.current
-                                    ? "bg-blue-600 text-white"
-                                    : "hover:bg-blue-400 hover:text-white",
-                                "block rounded-md px-3 py-2 text-base font-medium"
-                            )}
+                            className="hover:bg-blue-400 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
                         >
                             {item.name}
                         </DisclosureButton>

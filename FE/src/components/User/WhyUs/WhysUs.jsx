@@ -1,4 +1,3 @@
-import React from "react";
 import completeImg from "../../../assets/WhyUs-Icon/icon_complete.png";
 import _24hrsImg from "../../../assets/WhyUs-Icon/icon_24hrs.png";
 import priceImg from "../../../assets/WhyUs-Icon/icon_price.png";
@@ -33,7 +32,7 @@ const WhyUs = () => {
   ];
 
   return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto">
+    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto" id="whyus">
       <h2 className="text-2xl font-bold text-gray-800 mb-2">Why Us?</h2>
       <p className="text-gray-600 mb-8">
         Mengapa harus pilih Binar Car Rental?
