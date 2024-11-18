@@ -23,10 +23,12 @@ const Navbar = () => {
   }, [dispatch, navigate]);
 
   // Use react query to fetch API
-  const {data, isSuccess, isError} = useQuery({
-    queryKey: ["profileAdmin"],
+  const { data, isSuccess, isError } = useQuery({
+    queryKey: ["profile"],
     queryFn: profile,
     enabled: token ? true : false,
+    staleTime: 5 * 60 * 1000, // Data dianggap fresh selama 5 menit
+    cacheTime: 10 * 60 * 1000,
   });
 
   useEffect(() => {

@@ -5,77 +5,82 @@ const JSONBigInt = require("json-bigint");
 const prisma = new PrismaClient();
 
 exports.getCars = async (query) => {
-    let searchedCar;
+  let searchedCar;
 
-    if (Object.keys(query).length === 0) {
-        searchedCar = await prisma.cars.findMany({
-            include: {
-                manufactures: true,
-                types: true,
-            },
-        });
-    } else {
-        const {
-            plate,
-            manufacture_id,
-            model,
-            rentPerDay,
-            capacity,
-            transmission,
-            available,
-            type_id,
-            year,
-        } = query;
+  // Konversi data query untuk tipe yang sesuai
+  const capacityNumber = query.capacity ? Number(query.capacity) : undefined;
+  const availableAt = query.availableAt
+    ? new Date(query.availableAt).toISOString()
+    : undefined;
+  const {
+    plate,
+    manufacture_id,
+    model,
+    rentPerDay,
+    transmission,
+    available,
+    type_id,
+    year,
+  } = query;
 
-        searchedCar = await prisma.cars.findMany({
-            where: {
-                OR: [
-                    {
-                        plate: plate
-                            ? { contains: plate, mode: "insensitive" }
-                            : undefined,
+  // Pencarian tanpa query (get semua data)
+  if (Object.keys(query).length === 0) {
+    searchedCar = await prisma.cars.findMany({
+      include: {
+        manufactures: true,
+        types: true,
+      },
+    });
+  } else {
+    // Pencarian dengan query
+    searchedCar = await prisma.cars.findMany({
+      where: {
+        AND: [
+          // Kondisi AND utama untuk capacity dan availableAt
+          capacityNumber ? { capacity: { gte: capacityNumber } } : undefined,
+          availableAt ? { availableAt: { equals: availableAt } } : undefined,
+          // Kondisi OR tambahan
+          {
+            OR: [
+              plate
+                ? { plate: { contains: plate, mode: "insensitive" } }
+                : undefined,
+              model
+                ? { model: { contains: model, mode: "insensitive" } }
+                : undefined,
+              transmission
+                ? {
+                    transmission: {
+                      contains: transmission,
+                      mode: "insensitive",
                     },
-                    {
-                        model: model
-                            ? { contains: model, mode: "insensitive" }
-                            : undefined,
-                    },
-                    {
-                        transmission: transmission
-                            ? { contains: transmission, mode: "insensitive" }
-                            : undefined,
-                    },
-                    {
-                        rentPerDay: rentPerDay
-                            ? { equals: rentPerDay }
-                            : undefined,
-                    },
-                    { capacity: capacity ? { equals: capacity } : undefined },
-                    {
-                        available:
-                            available !== undefined
-                                ? { equals: available }
-                                : undefined,
-                    },
-                    {
-                        manufacture_id: manufacture_id
-                            ? { equals: manufacture_id }
-                            : undefined,
-                    },
-                    { type_id: type_id ? { equals: type_id } : undefined },
-                    { year: year ? { equals: year } : undefined },
-                ].filter(Boolean),
-            },
-            include: {
-                manufactures: true,
-                types: true,
-            },
-        });
-    }
+                  }
+                : undefined,
+              rentPerDay ? { rentPerDay: { equals: rentPerDay } } : undefined,
+              available !== undefined
+                ? { available: { equals: available } }
+                : undefined,
+              manufacture_id
+                ? { manufacture_id: { equals: manufacture_id } }
+                : undefined,
+              type_id ? { type_id: { equals: type_id } } : undefined,
+              year ? { year: { equals: year } } : undefined,
+            ].filter(Boolean),
+          },
+        ].filter(Boolean),
+      },
+      include: {
+        manufactures: true,
+        types: true,
+      },
+    });
+  }
 
-    const serializedCars = JSONBigInt.stringify(searchedCar);
-    return JSONBigInt.parse(serializedCars);
+  // Serialisasi untuk JSONBigInt
+  const serializedCars = JSONBigInt.stringify(searchedCar);
+  return JSONBigInt.parse(serializedCars);
 };
+
 
 exports.getCarById = async (id) => {
     const car = await prisma.cars.findFirst({

@@ -7,6 +7,8 @@ import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+  import { ToastContainer, toast } from "react-toastify";
+ import "react-toastify/dist/ReactToastify.css";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
@@ -27,6 +29,7 @@ if (!rootElement.innerHTML) {
           <RouterProvider router={router} />
         </QueryClientProvider>
       </Provider>
+      <ToastContainer />
     </StrictMode>
   );
 }

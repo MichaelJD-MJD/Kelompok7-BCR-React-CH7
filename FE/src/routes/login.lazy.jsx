@@ -36,6 +36,7 @@ function Login() {
 
       // redirect to home
       navigate({ to: "/" });
+      toast.success("Login Success");
     },
     onError: (err) => {
       toast.error(err?.message);
