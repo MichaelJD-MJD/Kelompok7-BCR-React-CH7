@@ -134,7 +134,7 @@ export default function SearchBar() {
       )}
 
       {showResults && (
-        <div className="container w-4/5 flex flex-wrap">
+        <div className="container w-4/5 flex flex-wrap justify-center gap-4">
           {isNotFound ? (
             <h1 className="text-center w-full text-4xl text-red-700 font-bold">
               Car is not found!
