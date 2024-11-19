@@ -10,6 +10,6 @@
 
 | Nama      | Tugas                                                                                   |
 |-----------|-----------------------------------------------------------------------------------------|
-| Michael   | Mengerjakan tampilan Login, Register, Navbar, Sidebar, dan CRUD Car                     |
-| Bhisma    | Mengerjakan CRUD Manufacture                                                            |
-| David     | Mengerjakan CRUD Type dan Menambahkan Proteksi Autentikasi (Protected Auth)
+| Michael   | Mengerjakan React Query untuk login, profile, searchCar, dan CRUD car. Membuat routing untuk admin, membuat beberapa komponen di halaman index. Menjalankan logika untuk search car dan detail car. |
+| Bhisma    | Mengerjakan React Query pada CRUD manufacture, membuat tampilan halaman search car, dan detail car. |
+| David     | Mengerjakan React Query pada CRUD types, membuat beberapa komponen di halaman index.    |
